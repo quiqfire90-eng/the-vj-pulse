@@ -85,11 +85,11 @@
       // already-open tabs pre-paint; it collapses them on their next load.
       try {
         if (localStorage.getItem('full-display-theme-applied') === '1') {
-          var demoTheme = localStorage.getItem('demo-display-theme');
-          var demoDark = demoTheme === 'dark' ||
+          var Theme = localStorage.getItem('demo-display-theme');
+          var Dark = demoTheme === 'dark' ||
             (demoTheme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
           if (demoDark) {
-            var demoRoot = document.documentElement;
+            var Root = document.documentElement;
             Root.setAttribute('data-ds', 'base44');
             Root.setAttribute('data-theme', 'dark');
             Root.classList.add('dark');
@@ -109,7 +109,7 @@
     <meta name="apple-mobile-web-app-title" content="Base44">
     <link rel="apple-touch-icon" sizes="180x180" href="https://app.base44.com/apple-touch-icon.png">
     <link rel="manifest" href="https://app.base44.com/manifest.json">
-    <title>The VJ Pulse | Base44</title>
+    <title>The VJ Pulse |</title>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
