@@ -84,17 +84,17 @@
       // self-heals from the next load on. Flipping the switch does not repaint
       // already-open tabs pre-paint; it collapses them on their next load.
       try {
-        if (localStorage.getItem('demo-display-theme-applied') === '1') {
+        if (localStorage.getItem('full-display-theme-applied') === '1') {
           var demoTheme = localStorage.getItem('demo-display-theme');
           var demoDark = demoTheme === 'dark' ||
             (demoTheme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
           if (demoDark) {
             var demoRoot = document.documentElement;
-            demoRoot.setAttribute('data-ds', 'base44');
-            demoRoot.setAttribute('data-theme', 'dark');
-            demoRoot.classList.add('dark');
+            Root.setAttribute('data-ds', 'base44');
+            Root.setAttribute('data-theme', 'dark');
+            Root.classList.add('dark');
             // Kill the pre-CSS white document flash; the app paints over it.
-            demoRoot.style.backgroundColor = '#09090b';
+            Root.style.backgroundColor = '#09090b';
           }
         }
       } catch (e) {}
