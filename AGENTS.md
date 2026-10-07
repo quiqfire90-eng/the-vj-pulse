@@ -13,18 +13,24 @@ DOM is inlined in the HTML, so the frozen UI still displays.
 
 ## Running it
 
-The app is served as a static page with nginx on host port 3000:
+The app is served as a static page by `serve.py` (python:3.12-slim) on port 3000:
 
 ```
 docker compose -f docker-compose.base44.yml up -d --build
 ```
 
-- nginx copies the HTML snapshot to `index.html` at startup and serves it at `/`.
+- `serve.py` reads the snapshot, strips every `<script>` tag (the inline
+  analytics/tracking scripts stall the preview iframe), blanks references to the
+  missing saved-assets folder, and serves the cleaned rendered HTML/CSS.
+- `handle_error` swallows benign `ConnectionResetError`/`BrokenPipeError` from
+  clients disconnecting mid-transfer so the logs stay clean.
 - No credentials or external services are required.
-- This is a static snapshot — it is not interactive and will not reflect edits to
-  the HTML without a container restart (call `reload_preview` after changes).
+- This is a static snapshot — it is not interactive. Edits to `serve.py` or the
+  snapshot require a container restart (call `reload_preview` after changes).
 
 ## Verification
 
-- `curl http://localhost:3000/` returns the HTML page (HTTP 200).
+- `curl http://localhost:3000/` returns the cleaned page (HTTP 200, 0 `<script>`
+  tags, `id="root"` present, title `The VJ Pulse |`).
 - `docker compose ps` shows the `web` service healthy.
+- `docker compose logs web` shows only 200 access lines, no tracebacks.

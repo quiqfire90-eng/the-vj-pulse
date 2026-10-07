@@ -1,21 +1,16 @@
 services:
   web:
-    # This repo is a single saved HTML snapshot of a Base44 app. Its inline
-    # analytics/tracking scripts stall the preview iframe, so at startup we
-    # strip every <script> tag (keeping the rendered HTML/CSS) and serve the
-    # cleaned page. python:3.12-slim is a plain runtime base image.
+    # This repo is a single saved HTML snapshot of a Base44 app. serve.py strips
+    # the inline analytics/tracking <script> tags (which stall the preview iframe)
+    # and serves the cleaned rendered HTML/CSS on port 3000. python:3.12-slim is
+    # a plain runtime base image.
     image: python:3.12-slim
     restart: on-failure
     ports:
       - "3000:3000"
     volumes:
       - ./:/repo:ro
-    command:
-      - sh
-      - -c
-      - >
-        python3 -c 'import re,os; h=open("/repo/The VJ Pulse _ Base44.html",encoding="utf-8").read(); h=re.sub(r"<script.*?</script>","",h,flags=re.S); os.makedirs("/srv",exist_ok=True); open("/srv/index.html","w",encoding="utf-8").write(h)' &&
-        cd /srv && exec python3 -m http.server 3000 --bind 0.0.0.0
+    command: ["python3", "/repo/serve.py"]
     healthcheck:
       test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/')"]
       interval: 10s
